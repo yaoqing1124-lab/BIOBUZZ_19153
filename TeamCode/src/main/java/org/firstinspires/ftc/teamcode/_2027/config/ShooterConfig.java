@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode._2027.config;
 
-import com.qualcomm.robotcore.hardware.PIDFCoefficients;
-
 import org.firstinspires.ftc.teamcode._2027.subsystem.Shooter.Flywheel;
 
 public class ShooterConfig {
@@ -14,9 +12,6 @@ public class ShooterConfig {
 
     public double offset;
     public double center; //voltage
-    public double minPitch;
-    public double maxPitchDeg = 10;
-    public PIDFCoefficients flywheelPID;
     public Flywheel flywheelInstance;
     public ShooterConfig turretName(String turretName){
         this.turretName = turretName;
@@ -40,14 +35,6 @@ public class ShooterConfig {
     }
     public ShooterConfig flywheelInstance(Flywheel flywheelInstance){
         this.flywheelInstance = flywheelInstance;
-        return this;
-    }
-    public ShooterConfig minPitch(double minPitch){
-        this.minPitch = minPitch;
-        return this;
-    }
-    public ShooterConfig flywheelPID(PIDFCoefficients flywheelPID){
-        this.flywheelPID = flywheelPID;
         return this;
     }
     public static class physical{

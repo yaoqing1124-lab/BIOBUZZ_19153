@@ -1,4 +1,3 @@
-
 package org.firstinspires.ftc.teamcode._2027.subsystem.Shooter;
 
 import com.qualcomm.robotcore.hardware.Servo;
@@ -8,142 +7,77 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode._2027.config.Config;
 import org.firstinspires.ftc.teamcode._2027.config.ShooterConfig;
-import org.firstinspires.ftc.teamcode._2027.subsystem.drive.odometry.Pinpoint;
+import org.firstinspires.ftc.teamcode._2027.drive.odometry.Pinpoint;
 import org.firstinspires.ftc.teamcode.arch.op.OpBehavior;
 import org.firstinspires.ftc.teamcode.arch.op.OpObject;
 import org.firstinspires.ftc.teamcode.util.Pose;
 
 public class Turret extends OpBehavior {
-
-    private final ShooterConfig config;
-    private Servo turret;
-    private static final double MAX_DEG = 350.0 * 11.0 / 10.0;
-    private double lastAimDegree = 0.0;
-
-    private Turret(ShooterConfig config) {
+    private Turret(ShooterConfig config){
         this.config = config;
     }
-
-    private static final Turret s_instance;
-    private static final Turret l_instance;
-
+    private final static Turret s_instance;
+    private final static Turret l_instance;
     static {
         s_instance = new Turret(Config.Shooter.S);
         l_instance = new Turret(Config.Shooter.L);
-
-        OpObject.RegisterGlobalBehavior(s_instance);
-
-        if (OpObject.getMode() == OpObject.Mode.Competition) {
-            OpObject.RegisterGlobalBehavior(s_instance);
-            OpObject.RegisterGlobalBehavior(l_instance);
-        }
+//        OpObject.RegisterGlobalBehavior(s_instance);
+//        OpObject.RegisterGlobalBehavior(l_instance);
     }
-
-    public static Pose target = new Pose(0, 0);
-
-    public static Turret get_s_instance() {
+    public static Pose target = new Pose(0,0);
+    public static Turret get_s_instance(){
         return s_instance;
     }
-
-    public static Turret get_l_instance() {
+    public static Turret get_l_instance(){
         return l_instance;
     }
-
+    private ShooterConfig config;
+    private Servo turret;
     @Override
     public void Init() {
-        turret = m_object.hardwareMap.get(
-                Servo.class,
-                config.turretName
-        );
-
-        lastAimDegree = 0.0;
+        turret = m_object.hardwareMap.get(Servo.class, config.turretName);
     }
 
     @Override
     public void Start() {
+
     }
 
     @Override
     public void Loop() {
         target = AimTarget.get_instance().getTargetPose();
-
-        double aimDegree = calculateFieldAimDegree();
-
-        double selectedDegree = selectAimDegree(aimDegree);
-
-        if (!Double.isNaN(selectedDegree)) {
-            double servoPosition = degree2position(selectedDegree);
-
-            turret.setPosition(servoPosition);
-            lastAimDegree = selectedDegree;
-        }
+        turret.setPosition(degree2position(calculateFieldAimDegree()));
     }
 
     @Override
     public void Stop() {
     }
-
-    public Pose turretPose() {
-        Pose2D robot = Pinpoint.getPose2D();
-
-        double heading = robot.getHeading(AngleUnit.RADIANS);
-
-        double robotX = robot.getX(DistanceUnit.INCH);
-        double robotY = robot.getY(DistanceUnit.INCH);
-
-        double X = robotX
-                - config.offset * Math.sin(heading);
-
-        double Y = robotY
-                + config.offset * Math.cos(heading);
-
+    public Pose turretPose(){
+        Pose2D currentRobot = Pinpoint.getPose2D();
+        double X = currentRobot.getX(DistanceUnit.INCH) + config.offset * Math.sin(currentRobot.getHeading(AngleUnit.RADIANS));
+        double Y = currentRobot.getY(DistanceUnit.INCH) + config.offset * Math.cos(currentRobot.getHeading(AngleUnit.RADIANS));
         return new Pose(X, Y);
     }
-
-    public double calculateFieldAimDegree() {
-        Pose turretPos = turretPose();
-
-        double dx = target.x - turretPos.x;
-        double dy = target.y - turretPos.y;
-
-        double fieldAimDegree = Math.toDegrees(
-                Math.atan2(-dx, dy)
-        );
-
-        double robotHeading = Pinpoint.getPose2D()
-                .getHeading(AngleUnit.DEGREES);
-
-        return fieldAimDegree - robotHeading;
+    public double calculateFieldAimDegree(){
+        double dx = target.x - turretPose().x; //12-0
+        double dy = target.y - turretPose().y; //-19-0
+        double AimRadians = Math.atan2(dy, dx);
+        double FieldAimDegree = Math.toDegrees(AimRadians) - Pinpoint.getHeading();
+        while (FieldAimDegree > 180) FieldAimDegree -= 360;
+        while (FieldAimDegree < -180) FieldAimDegree += 360;
+        return FieldAimDegree;
     }
-
-    private double selectAimDegree(double degree) {
-        double minDegree = (config.center - 1.0) * MAX_DEG;
-        double maxDegree = config.center * MAX_DEG;
-
-        double bestDegree = Double.NaN;
-        double bestDistance = Double.POSITIVE_INFINITY;
-
-        for (int k = -3; k <= 3; k++) {
-
-            double candidate = degree + 360.0 * k;
-
-            if (candidate >= minDegree &&
-                    candidate <= maxDegree) {
-
-                double distance =
-                        Math.abs(candidate - lastAimDegree);
-
-                if (distance < bestDistance) {
-                    bestDistance = distance;
-                    bestDegree = candidate;
-                }
-            }
-        }
-
-        return bestDegree;
+    public double R(){
+        double dx = turretPose().x - Pinpoint.getPose2D().getX(DistanceUnit.INCH);
+        double dy = turretPose().y - Pinpoint.getPose2D().getY(DistanceUnit.INCH);
+        return Math.hypot(dx, dy);
     }
-
-    public double degree2position(double degree) {
-        return config.center - degree / MAX_DEG;
+    public double H(){
+        return ShooterConfig.physical.H;
+    }
+    public double degree2position(double degree){
+        final double MAX_DEG = 350 * 1.1;
+        double position = config.center - degree / (MAX_DEG / 2);
+        return position;
     }
 }

@@ -1,16 +1,14 @@
 package org.firstinspires.ftc.teamcode._2027.subsystem.Shooter;
 
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode._2027.config.Config;
 import org.firstinspires.ftc.teamcode._2027.config.ShooterConfig;
-import org.firstinspires.ftc.teamcode._2027.subsystem.drive.odometry.Pinpoint;
+import org.firstinspires.ftc.teamcode._2027.drive.odometry.Pinpoint;
 import org.firstinspires.ftc.teamcode.arch.op.OpBehavior;
-import org.firstinspires.ftc.teamcode.arch.op.OpObject;
 import org.firstinspires.ftc.teamcode.util.Pose;
 
 public class Pitch extends OpBehavior {
@@ -22,11 +20,8 @@ public class Pitch extends OpBehavior {
     static {
         s_instance = new Pitch(Config.Shooter.S);
         l_instance = new Pitch(Config.Shooter.L);
-        if(OpObject.getMode() == OpObject.Mode.Competition){
-            OpObject.RegisterGlobalBehavior(s_instance);
-            OpObject.RegisterGlobalBehavior(l_instance);
-        }
-        OpObject.RegisterGlobalBehavior(s_instance);
+//        OpObject.RegisterGlobalBehavior(s_instance);
+//        OpObject.RegisterGlobalBehavior(l_instance);
     }
     public static Pose target;
     public static Pitch get_s_instance(){
@@ -49,25 +44,19 @@ public class Pitch extends OpBehavior {
 
     @Override
     public void Loop() {
-//        switch (mode){
-//            case correction:
-//                Double degree = ShooterConfig.physical.VelocityCalculateAngle(config.flywheelInstance.getActualVelocity(), R(), H());
-//                if(degree != null){
-//                    m_pitch.setPosition(degree2position(degree));
-//                }else{
-//                    m_pitch.setPosition(degree2position(ShooterConfig.physical.calcuteAngle(R(), H())));
-//                }
-//                break;
-//            case test:
-//                m_pitch.setPosition(degree2position(ShooterConfig.physical.calcuteAngle(R(), H())));
-//                break;
-//        }
-
-
-//        double targetPosition = config.minPitch + R() / 70;
-//        targetPosition = Range.clip(targetPosition, config.minPitch, config.minPitch + config.maxPitchDeg * 360 / 15);
-//        m_pitch.setPosition(targetPosition);
-        m_pitch.setPosition(0);
+        switch (mode){
+            case correction:
+                Double degree = ShooterConfig.physical.VelocityCalculateAngle(config.flywheelInstance.getActualVelocity(), R(), H());
+                if(degree != null){
+                    m_pitch.setPosition(degree2position(degree));
+                }else{
+                    m_pitch.setPosition(degree2position(ShooterConfig.physical.calcuteAngle(R(), H())));
+                }
+                break;
+            case test:
+                m_pitch.setPosition(degree2position(ShooterConfig.physical.calcuteAngle(R(), H())));
+                break;
+        }
     }
 
     @Override
