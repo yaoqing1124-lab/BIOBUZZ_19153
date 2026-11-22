@@ -2,17 +2,18 @@ package org.firstinspires.ftc.teamcode._2027.subsystem.Shooter;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode._2027.config.Config;
 import org.firstinspires.ftc.teamcode._2027.config.ShooterConfig;
-import org.firstinspires.ftc.teamcode._2027.drive.odometry.Pinpoint;
+import org.firstinspires.ftc.teamcode._2027.subsystem.drive.odometry.Pinpoint;
 import org.firstinspires.ftc.teamcode.arch.op.OpBehavior;
 import org.firstinspires.ftc.teamcode.arch.op.OpObject;
 import org.firstinspires.ftc.teamcode.util.Pose;
-
 public class Flywheel extends OpBehavior {
     private Flywheel(ShooterConfig config){
         this.config = config;
@@ -22,8 +23,12 @@ public class Flywheel extends OpBehavior {
     static {
         s_instance = new Flywheel(Config.Shooter.S);
         l_instance = new Flywheel(Config.Shooter.L);
-//        OpObject.RegisterGlobalBehavior(s_instance);
-//        OpObject.RegisterGlobalBehavior(l_instance);
+        if(OpObject.getMode() == OpObject.Mode.Competition){
+            OpObject.RegisterGlobalBehavior(s_instance);
+            OpObject.RegisterGlobalBehavior(l_instance);
+        }
+        OpObject.RegisterGlobalBehavior(s_instance);
+
     }
     public static Pose target;
     public static Flywheel get_s_instance(){
@@ -37,8 +42,11 @@ public class Flywheel extends OpBehavior {
     @Override
     public void Init() {
         m_motor = m_object.hardwareMap.get(DcMotorEx.class, config.flywheelName);
+//        m_motor.setDirection(DcMotorSimple.Direction.REVERSE);
         m_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        m_motor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, config.flywheelPID);
         m_motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         m_motor.setVelocity(0);
     }
 
@@ -50,7 +58,8 @@ public class Flywheel extends OpBehavior {
     @Override
     public void Loop() {
         target = Turret.target;
-        m_motor.setVelocity(VirtualtoActualVelocity(ShooterConfig.physical.calculateVelocity(R(), H())));
+        m_motor.setVelocity(3300 / 60.0 * 28.0);
+//        m_motor.setVelocity(VirtualtoActualVeloci。ty(ShooterConfig.physical.calculateVelocity(R(), H())));
     }
 
     @Override
@@ -78,5 +87,8 @@ public class Flywheel extends OpBehavior {
     public double getActualVelocity(){
         //TODO
         return 0;
+    }
+    public double getVelocity(){
+        return m_motor.getVelocity() / 28 * 60;
     }
 }

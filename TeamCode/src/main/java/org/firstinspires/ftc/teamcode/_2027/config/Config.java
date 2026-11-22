@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode._2027.config;
 
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
+
 import org.firstinspires.ftc.teamcode._2027.subsystem.Shooter.Flywheel;
 import org.firstinspires.ftc.teamcode.util.Team;
 
@@ -32,8 +34,8 @@ public class Config {
         }
         public static class pinpoint{
             public static String name = "pinpoint";
-            public static double Xoffset = 60 / 25.4;
-            public static double Yoffset = 16.6 / 25.4;
+            public static double Xoffset = 16.6 / 25.4;
+            public static double Yoffset = 60 / 25.4;
         }
     }
     // +---------------------------------+
@@ -47,14 +49,17 @@ public class Config {
                 .flywheelName("Sflywheel")
                 .pitchName("Spitch")
                 .offset(-93 / 25.4)
-                .center(0.68)
+                .center(0.15)
+                .minPitch(0)
+                .flywheelPID(new PIDFCoefficients(300, 15, 50, 0))
                 .flywheelInstance(Flywheel.get_s_instance());
         public static final ShooterConfig L = new ShooterConfig()
                 .turretName("Lturret")
                 .flywheelName("Lflywheel")
                 .pitchName("Lpitch")
                 .offset(-93 / 25.4)
-                .center(0.05)
+                .center(0.7)
+                .minPitch(0)
                 .flywheelInstance(Flywheel.get_s_instance());
     }
 }

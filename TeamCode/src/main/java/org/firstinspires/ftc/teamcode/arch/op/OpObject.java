@@ -5,6 +5,7 @@ import android.content.Context;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
+import org.firstinspires.ftc.teamcode.util.Team;
 
 import java.io.IOException;
 import java.util.Enumeration;
@@ -132,5 +133,13 @@ public abstract class OpObject extends OpMode {
             m_behaviors.remove(behavior);
             behavior.m_object = null;
         }
+    }
+
+    public enum Mode{
+        Competition, Test
+    }
+    private static Mode mode = Mode.Test;
+    public static Mode getMode(){
+        return mode;
     }
 }

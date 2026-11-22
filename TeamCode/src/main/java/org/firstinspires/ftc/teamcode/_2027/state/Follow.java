@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode._2027.state;
 
-import org.firstinspires.ftc.teamcode._2027.drive.odometry.Follower;
-import org.firstinspires.ftc.teamcode._2027.drive.odometry.PathSegment;
+import org.firstinspires.ftc.teamcode._2027.subsystem.drive.odometry.Follower;
+import org.firstinspires.ftc.teamcode._2027.subsystem.drive.odometry.PathSegment;
 import org.firstinspires.ftc.teamcode.arch.op.behavior.statemachine.StateObject;
 
 import java.util.List;

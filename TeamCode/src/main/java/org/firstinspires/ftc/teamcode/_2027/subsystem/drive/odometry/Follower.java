@@ -1,8 +1,8 @@
-package org.firstinspires.ftc.teamcode._2027.drive.odometry;
+package org.firstinspires.ftc.teamcode._2027.subsystem.drive.odometry;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
-import org.firstinspires.ftc.teamcode._2027.drive.swerve.Swerve;
-import org.firstinspires.ftc.teamcode._2027.drive.swerve.SwerveModule;
+import org.firstinspires.ftc.teamcode._2027.subsystem.drive.swerve.Swerve;
+import org.firstinspires.ftc.teamcode._2027.subsystem.drive.swerve.SwerveModule;
 import org.firstinspires.ftc.teamcode.arch.op.OpBehavior;
 import org.firstinspires.ftc.teamcode.util.PIDFController;
 import org.firstinspires.ftc.teamcode.util.Pose;

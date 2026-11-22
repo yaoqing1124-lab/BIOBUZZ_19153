@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode._2027.drive.odometry;
+package org.firstinspires.ftc.teamcode._2027.subsystem.drive.odometry;
 
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 
@@ -23,7 +23,7 @@ public class Pinpoint extends OpBehavior {
     public static GoBildaPinpointDriver pinpoint;
     @Override
     public void Init() {
-        pinpoint = m_object.hardwareMap.get(GoBildaPinpointDriver.class, Config.Drive.pinpoint.name);
+        pinpoint = m_object.hardwareMap.get(GoBildaPinpointDriver.class,    Config.Drive.pinpoint.name);
 
         pinpoint.setOffsets(Config.Drive.pinpoint.Xoffset, Config.Drive.pinpoint.Yoffset, DistanceUnit.INCH);
         pinpoint.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);

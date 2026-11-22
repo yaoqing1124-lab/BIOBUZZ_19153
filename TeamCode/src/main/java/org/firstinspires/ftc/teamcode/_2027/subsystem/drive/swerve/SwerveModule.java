@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode._2027.drive.swerve;
+package org.firstinspires.ftc.teamcode._2027.subsystem.drive.swerve;
 
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -70,10 +70,10 @@ public class SwerveModule {
             switch (zeroPowerMode) {
                 case X_LOCK:
                     switch (config.Quadrant) {
-                        case 1: targetAngle = Math.toRadians(225); break;
-                        case 2: targetAngle = Math.toRadians(315); break;
-                        case 3: targetAngle = Math.toRadians(45);  break;
-                        case 4: targetAngle = Math.toRadians(135); break;
+                        case 1: targetAngle = Math.toRadians(135);   break;
+                        case 2: targetAngle = Math.toRadians(45);  break;
+                        case 3: targetAngle = Math.toRadians(315);  break;
+                        case 4: targetAngle = Math.toRadians(225);  break;
                         default: targetAngle = 0.0; break;
                     }
                     lastTargetAngle = targetAngle;

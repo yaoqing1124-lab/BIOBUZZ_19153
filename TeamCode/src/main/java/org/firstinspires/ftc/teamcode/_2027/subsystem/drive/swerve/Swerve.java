@@ -1,7 +1,7 @@
-package org.firstinspires.ftc.teamcode._2027.drive.swerve;
+package org.firstinspires.ftc.teamcode._2027.subsystem.drive.swerve;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
-import org.firstinspires.ftc.teamcode._2027.drive.odometry.Pinpoint;
+import org.firstinspires.ftc.teamcode._2027.subsystem.drive.odometry.Pinpoint;
 import org.firstinspires.ftc.teamcode.arch.op.OpBehavior;
 import org.firstinspires.ftc.teamcode.arch.op.OpObject;
 import org.firstinspires.ftc.teamcode.util.PIDFController;
@@ -68,10 +68,13 @@ public class Swerve extends OpBehavior {
     private static boolean isFieldCentric = true; // 預設啟用場地中心模式
     private double fieldCentricOffset = 0.0; // 場地正前方歸零偏移量
 
-    private static SwerveModule.ZeroPowerMode currentZeroPowerMode = SwerveModule.ZeroPowerMode.X_LOCK;
+    private static SwerveModule.ZeroPowerMode currentZeroPowerMode = SwerveModule.ZeroPowerMode.HOLD;
 
     public static void setZeroPowerMode(SwerveModule.ZeroPowerMode mode) {
         Swerve.currentZeroPowerMode = mode;
+    }
+    public static SwerveModule.ZeroPowerMode getZeroPowerMode(){
+        return Swerve.currentZeroPowerMode;
     }
 
     public static void setFieldCentric(boolean fieldCentric) {
@@ -138,8 +141,9 @@ public class Swerve extends OpBehavior {
                 double error = targetHeading - currentHeading;
                 while (error > 180) error -= 360;
                 while (error < -180) error += 360;
-
-                yaw = headingController.calculate(error);
+                if(Math.abs(error) > 5) {
+                    yaw = headingController.calculate(error);
+                }
             }
             lf.update(inputAxial, inputLateral, yaw, currentZeroPowerMode);
             lb.update(inputAxial, inputLateral, yaw, currentZeroPowerMode);

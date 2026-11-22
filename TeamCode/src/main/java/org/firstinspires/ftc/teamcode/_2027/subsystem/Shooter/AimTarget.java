@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode._2027.subsystem.Shooter;
 
-import org.firstinspires.ftc.teamcode._2027.drive.odometry.Pinpoint;
+import org.firstinspires.ftc.teamcode._2027.subsystem.drive.odometry.Pinpoint;
 import org.firstinspires.ftc.teamcode.arch.op.OpBehavior;
 import org.firstinspires.ftc.teamcode.arch.op.OpObject;
 import org.firstinspires.ftc.teamcode.util.Pose;
@@ -30,7 +30,9 @@ public class AimTarget extends OpBehavior {
     @Override
     public void Loop() {
         currentPose = Pinpoint.getPose();
-        targetPose = new Pose(12, -19);
+        if(OpObject.getMode() == OpObject.Mode.Test) {
+            targetPose = new Pose(12, -19);
+        }
 //        switch (Config.team){
 //            case BLUE:
 //                if(currentPose.y > 0){
